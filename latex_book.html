@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Don't Panic: A LaTeX Guide for Humans</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root[data-theme="dark"]{--bg:#0d1117;--sidebar:#161b22;--surface:#1c2128;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#f59e0b;--accent2:#fbbf24;--code-bg:#161b22;--warn-bg:rgba(239,68,68,0.09);--warn-c:#ef4444;--tip-bg:rgba(34,197,94,0.09);--tip-c:#22c55e;--dark-bg:rgba(168,85,247,0.09);--dark-c:#a855f7;--cat-bg:rgba(245,158,11,0.09);--cat-c:#f59e0b;--link:#58a6ff;--table-hover:rgba(255,255,255,0.04)}
+:root[data-theme="light"]{--bg:#ffffff;--sidebar:#f6f8fa;--surface:#f0f4f8;--border:#d0d7de;--text:#1f2328;--muted:#656d76;--accent:#d97706;--accent2:#b45309;--code-bg:#f6f8fa;--warn-bg:rgba(239,68,68,0.07);--warn-c:#dc2626;--tip-bg:rgba(34,197,94,0.07);--tip-c:#16a34a;--dark-bg:rgba(168,85,247,0.07);--dark-c:#7c3aed;--cat-bg:rgba(245,158,11,0.07);--cat-c:#d97706;--link:#0969da;--table-hover:rgba(0,0,0,0.03)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;font-size:16px;line-height:1.75}
+
+/* SIDEBAR */
+.sidebar{width:270px;min-width:270px;background:var(--sidebar);border-right:1px solid var(--border);height:100vh;position:sticky;top:0;overflow-y:auto;padding:0 0 40px}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sidebar-header{padding:20px 18px 16px;border-bottom:1px solid var(--border);background:var(--sidebar)}
+.sidebar-header h1{font-size:14px;font-weight:800;color:var(--accent);line-height:1.3}
+.sidebar-header p{font-size:11px;color:var(--muted);margin-top:3px}
+.nav-group{margin-top:8px}
+.nav-label{padding:12px 18px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted)}
+.nav-item a{display:flex;align-items:center;gap:8px;padding:5px 18px;text-decoration:none;color:var(--muted);font-size:12.5px;border-left:2px solid transparent;transition:all 0.15s;line-height:1.4}
+.nav-item a:hover{color:var(--text);border-left-color:var(--border);background:var(--surface)}
+.nav-item a.active{color:var(--accent);border-left-color:var(--accent);background:var(--cat-bg)}
+.nav-item .num{font-size:10px;color:var(--muted);font-family:monospace;min-width:18px}
+
+/* MAIN */
+.main{flex:1;max-width:900px;padding:0 64px 100px;overflow-x:hidden}
+
+/* TOP BAR */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:24px 0 24px;border-bottom:1px solid var(--border);margin-bottom:60px;position:sticky;top:0;background:var(--bg);z-index:10}
+.book-brand{}
+.book-brand h1{font-size:20px;font-weight:800;color:var(--accent)}
+.book-brand p{font-size:12px;color:var(--muted);margin-top:2px}
+.controls{display:flex;gap:8px}
+.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:all 0.15s;text-decoration:none}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* CHAPTER */
+.chapter{margin-bottom:80px;padding-bottom:60px;border-bottom:1px solid var(--border);scroll-margin-top:80px}
+.chapter:last-child{border-bottom:none}
+.chapter-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.chapter h2{font-size:32px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.chapter-intro{font-size:15px;color:var(--muted);margin-bottom:36px;font-style:italic;border-left:3px solid var(--border);padding-left:16px}
+h3{font-size:20px;font-weight:700;margin:36px 0 14px;color:var(--text)}
+h4{font-size:15px;font-weight:700;margin:24px 0 8px;color:var(--accent);text-transform:uppercase;letter-spacing:0.5px}
+p{margin-bottom:16px;line-height:1.8}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+strong{color:var(--text);font-weight:700}
+em{color:var(--accent)}
+
+/* CODE */
+code{font-family:'Fira Code','Cascadia Code',Consolas,monospace;font-size:13px;background:var(--surface);padding:2px 7px;border-radius:5px;color:var(--accent)}
+pre{background:#161b22 !important;border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:16px 0 28px;overflow-x:auto;position:relative}
+pre code{background:none !important;padding:0;font-size:13px;line-height:1.65;color:inherit}
+.pre-label{position:absolute;top:10px;right:14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:monospace}
+
+/* CALLOUTS */
+.callout{border-radius:12px;padding:16px 20px;margin:24px 0;border-left:4px solid;display:flex;gap:14px;align-items:flex-start}
+.callout-icon{font-size:22px;flex-shrink:0;line-height:1}
+.callout-body{flex:1}
+.callout-title{font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.callout-text{font-size:14px;line-height:1.65}
+.callout-text code{font-size:12px}
+.cat{background:var(--cat-bg);border-color:var(--cat-c)}.cat .callout-title{color:var(--cat-c)}
+.warn{background:var(--warn-bg);border-color:var(--warn-c)}.warn .callout-title{color:var(--warn-c)}
+.tip{background:var(--tip-bg);border-color:var(--tip-c)}.tip .callout-title{color:var(--tip-c)}
+.dark{background:var(--dark-bg);border-color:var(--dark-c)}.dark .callout-title{color:var(--dark-c)}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;margin:20px 0 28px;font-size:14px}
+th{background:var(--surface);padding:10px 14px;text-align:left;font-weight:700;border-bottom:2px solid var(--border);color:var(--accent);font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:14px}
+tr:hover td{background:var(--table-hover)}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;vertical-align:middle;margin-left:6px}
+.b-psych{background:rgba(99,102,241,0.18);color:#818cf8}
+.b-general{background:rgba(34,197,94,0.18);color:#4ade80}
+.b-apa{background:rgba(245,158,11,0.18);color:#fbbf24}
+
+/* ASCII */
+.ascii{font-family:monospace;font-size:12px;line-height:1.4;color:var(--accent);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:inline-block;margin:16px 0}
+
+/* HIGHLIGHT BOX */
+.hbox{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin:20px 0}
+.hbox h4{margin-top:0}
+
+/* LISTS */
+ul,ol{padding-left:24px;margin-bottom:18px}
+li{margin-bottom:8px;line-height:1.7}
+li code{font-size:12px}
+
+/* DIVIDER */
+.divider{border:none;border-top:1px solid var(--border);margin:36px 0}
+
+/* PRINT */
+@media print{
+  .sidebar,.topbar{display:none}
+  .main{padding:20px;max-width:100%}
+  pre{break-inside:avoid;border:1px solid #ccc !important;background:#f8f8f8 !important}
+  pre code{color:#333 !important}
+  .chapter{break-before:page;border-bottom:none}
+  .callout{border:1px solid #ccc}
+  body{font-size:12pt;color:#000;background:#fff}
+  h2{font-size:22pt}h3{font-size:16pt}
+  .ascii{display:none}
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main{padding:0 24px 60px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <h1>🐱 Don't Panic: A LaTeX Guide</h1>
+    <p>Beginner → Intermediate · APA 7 + General</p>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Chapters</div>
+    <div class="nav-item"><a href="#ch0"><span class="num">00</span> Why LaTeX Exists</a></div>
+    <div class="nav-item"><a href="#ch1"><span class="num">01</span> Your First Document</a></div>
+    <div class="nav-item"><a href="#ch2"><span class="num">02</span> Text & Formatting</a></div>
+    <div class="nav-item"><a href="#ch3"><span class="num">03</span> Structure & Sections</a></div>
+    <div class="nav-item"><a href="#ch4"><span class="num">04</span> Math & Stats</a></div>
+    <div class="nav-item"><a href="#ch5"><span class="num">05</span> Tables</a></div>
+    <div class="nav-item"><a href="#ch6"><span class="num">06</span> Figures & Images</a></div>
+    <div class="nav-item"><a href="#ch7"><span class="num">07</span> Citations & BibTeX</a></div>
+    <div class="nav-item"><a href="#ch8"><span class="num">08</span> APA 7 with apa7</a></div>
+    <div class="nav-item"><a href="#ch9"><span class="num">09</span> Packages</a></div>
+    <div class="nav-item"><a href="#ch10"><span class="num">10</span> Troubleshooting</a></div>
+    <div class="nav-label">Appendix</div>
+    <div class="nav-item"><a href="#appa"><span class="num">A</span> Full Paper Template</a></div>
+    <div class="nav-item"><a href="#appb"><span class="num">B</span> Cheat Sheet</a></div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="book-brand">
+    <h1>📖 Don't Panic: A LaTeX Guide for Humans</h1>
+    <p>Beginner → Intermediate · With cats, dark humour & zero mercy</p>
+  </div>
+  <div class="controls">
+    <button class="btn" onclick="toggleTheme()">🌓 Toggle Theme</button>
+    <button class="btn" onclick="window.print()">🖨️ Print / PDF</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 0 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch0">
+  <div class="chapter-tag">Chapter 00 · Introduction</div>
+  <h2>Why Does LaTeX Exist, and Why Are You Here</h2>
+  <p class="chapter-intro">An honest introduction to the most powerful document system you'll grow to simultaneously love and despise.</p>
+
+  <pre class="ascii">
+  /\\_/\\   
+ ( o.o )   "You wanted beautiful PDFs.
+  > ^ <    You signed up for compiler errors.
+           Welcome to LaTeX."
+  </pre>
+
+  <h3>What Actually Is LaTeX</h3>
+  <p>LaTeX (pronounced <em>lah-tek</em> or <em>lay-tek</em>, never <em>lay-tex</em> unless you want every TeX nerd in a 5km radius to physically wince) is a document preparation system. It's not a word processor. You don't click buttons and drag things around.</p>
+  <p>You <strong>write code</strong>. Then you <strong>compile</strong> it. Then you get a <strong>beautiful PDF</strong>. This is the entire deal.</p>
+
+  <div class="callout dark">
+    <div class="callout-icon">💀</div>
+    <div class="callout-body">
+      <div class="callout-title">Dark Corner</div>
+      <div class="callout-text">LaTeX was created by Leslie Lamport in 1984, building on Donald Knuth's TeX from 1978. It has been causing graduate students to question their life choices ever since. Your thesis is in good company.</div>
+    </div>
+  </div>
+
+  <h3>Word vs LaTeX — The Honest Comparison</h3>
+  <table>
+    <tr><th>Task</th><th>Microsoft Word</th><th>LaTeX</th></tr>
+    <tr><td>Write the first sentence</td><td>Instant</td><td>After 40 mins of setup</td></tr>
+    <tr><td>Format a numbered equation</td><td>20 minutes of pain</td><td>One line</td></tr>
+    <tr><td>Make APA citations</td><td>Zotero plugin + prayer</td><td>Automatic with biblatex</td></tr>
+    <tr><td>Table of contents</td><td>Breaks whenever you breathe</td><td><code>\tableofcontents</code> and done</td></tr>
+    <tr><td>The document shifts when you add a figure</td><td>Every. Single. Time.</td><td>Never, LaTeX handles it</td></tr>
+    <tr><td>Your file corrupts at 2am before submission</td><td>This is fine 🔥</td><td>It's plain text, it cannot corrupt</td></tr>
+    <tr><td>Learning curve</td><td>Flat</td><td>A cliff face</td></tr>
+  </table>
+
+  <h3>Why You Should Use It (Especially for Psych Papers)</h3>
+  <ul>
+    <li><strong>APA 7 formatting is automatic.</strong> Install one package and LaTeX handles headings, spacing, title pages, running heads, reference lists — all of it.</li>
+    <li><strong>Math and stats look professional.</strong> <code>$r(28) = .42$, $p = .021$</code> renders perfectly. No more struggling with Word's equation editor.</li>
+    <li><strong>Citations are a database, not a mess.</strong> One <code>.bib</code> file. Cite anywhere. Reference list auto-generates.</li>
+    <li><strong>Plain text files never corrupt.</strong> Your <code>.tex</code> file is just text. Git-trackable, indestructible.</li>
+    <li><strong>Academics take it seriously.</strong> Knowing LaTeX signals you're doing real research.</li>
+  </ul>
+
+  <div class="callout cat">
+    <div class="callout-icon">🐱</div>
+    <div class="callout-body">
+      <div class="callout-title">Cat Says</div>
+      <div class="callout-text">The first hour with LaTeX will make you want to go back to Word. The second hour, you'll be confused. By the third hour, you'll never want to use Word again. This guide will get you there in one sitting. Trust the process. The process is suffering, but it ends.</div>
+    </div>
+  </div>
+
+  <h3>How the Workflow Actually Goes</h3>
+  <pre><code class="language-plaintext">You write:    paper.tex  +  references.bib
+              ↓
+You compile:  [pdflatex] → [biber] → [pdflatex] → [pdflatex]
+              ↓
+You get:      paper.pdf  ← beautiful, professionally typeset
+
+(LaTeX also generates: paper.aux, paper.bbl, paper.bcf, paper.blg,
+ paper.log, paper.out, paper.run.xml, paper.synctex.gz
+ These are garbage files. Ignore them. Delete them when done.)</code></pre>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <div class="callout-title">Warning</div>
+      <div class="callout-text">You will get errors. Everyone gets errors. A missing <code>{</code> bracket can bring the whole thing down. This is not a sign you're doing it wrong — it's LaTeX's personality. Chapter 10 is your survival guide.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 1 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch1">
+  <div class="chapter-tag">Chapter 01 · Basics</div>
+  <h2>Your First Document</h2>
+  <p class="chapter-intro">The "Hello World" that nobody warned you would generate 7 extra files.</p>
+
+  <h3>The Minimal Working Document</h3>
+  <p>Paste this into Prism and hit compile. This is the absolute minimum:</p>
+
+  <pre><span class="pre-label">LaTeX</span><code class="language-latex">\documentclass{article}
+
+\begin{document}
+
+Hello, World. I am suffering beautifully.
+
+\end{document}</code></pre>
+
+  <p>That's it. That's a document. It'll produce one page with that sentence, a page number, and nothing else.</p>
+
+  <h3>Breaking Down Every Part</h3>
+
+  <h4>\documentclass{article}</h4>
+  <p>This must be the <strong>first line of every .tex file</strong>. It declares what kind of document you're making. Options include:</p>
+  <table>
+    <tr><th>Class</th><th>Use For</th><th>You'll Use This</th></tr>
+    <tr><td><code>article</code></td><td>Short papers, journal articles</td><td>Sometimes</td></tr>
+    <tr><td><code>report</code></td><td>Longer docs with chapters (theses)</td><td>Later</td></tr>
+    <tr><td><code>book</code></td><td>Actual books with chapters, parts</td><td>Probably never</td></tr>
+    <tr><td><code>apa7</code></td><td>APA 7 formatted psychology papers</td><td><strong>Always for psych</strong></td></tr>
+  </table>
+
+  <p>You can pass <strong>options</strong> in square brackets:</p>
+  <pre><code class="language-latex">\documentclass[12pt, a4paper]{article}
+%              ↑ font size  ↑ paper size</code></pre>
+
+  <h4>\begin{document} and \end{document}</h4>
+  <p>Everything between these two lines is your actual content. Anything before <code>\begin{document}</code> is the <strong>preamble</strong> — where you put settings, packages, and metadata. Anything after <code>\end{document}</code> is completely ignored by LaTeX.</p>
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <div class="callout-title">Pro Tip</div>
+      <div class="callout-text">Think of <code>\begin{document}</code> as <code>&lt;body&gt;</code> and the preamble as <code>&lt;head&gt;</code> in HTML. This is not a coincidence — both are metadata vs content.</div>
+    </div>
+  </div>
+
+  <h3>A More Realistic Starter Document</h3>
+  <pre><span class="pre-label">LaTeX</span><code class="language-latex">\documentclass[12pt, a4paper]{article}
+
+% ── PREAMBLE ──────────────────────────────────
+\usepackage[american]{babel}   % language rules
+\usepackage{amsmath}           % better math
+\usepackage{booktabs}          % professional tables
+\usepackage{graphicx}          % insert images
+\usepackage[hidelinks]{hyperref} % clickable links in PDF
+
+\title{My First LaTeX Document}
+\author{Shuvi}
+\date{\today}
+
+% ── DOCUMENT ──────────────────────────────────
+\begin{document}
+
+\maketitle  % generates the title block from above metadata
+
+\section{Introduction}
+This is where I write my introduction. LaTeX handles 
+all the formatting automatically.
+
+\section{Method}
+And the method section goes here.
+
+\end{document}</code></pre>
+
+  <h3>Comments in LaTeX</h3>
+  <p>The <code>%</code> character starts a comment. Everything after it on that line is ignored by the compiler — but visible to you in the source.</p>
+  <pre><code class="language-latex">This text appears in the PDF. % This comment does not appear.
+
+% This entire line is a comment.
+
+The result was significant. % TODO: add the actual p-value later</code></pre>
+
+  <div class="callout cat">
+    <div class="callout-icon">🐱</div>
+    <div class="callout-body">
+      <div class="callout-title">Cat Says</div>
+      <div class="callout-text">Comment liberally. Your future self at 2am will thank your present self for writing <code>% this package handles APA citations don't remove it</code> instead of just having a mystery line.</div>
+    </div>
+  </div>
+
+  <h3>Special Characters That Will Ruin Your Day</h3>
+  <p>These characters have special meaning in LaTeX. Type them raw and your document either breaks or produces something unexpected.</p>
+  <table>
+    <tr><th>You Want</th><th>Wrong</th><th>Right</th></tr>
+    <tr><td>% (percent sign)</td><td><code>50%</code></td><td><code>50\%</code></td></tr>
+    <tr><td>& (ampersand)</td><td><code>Baumeister & Twenge</code></td><td><code>Baumeister \& Twenge</code></td></tr>
+    <tr><td>$ (dollar sign)</td><td><code>cost $50</code></td><td><code>cost \$50</code></td></tr>
+    <tr><td># (hash)</td><td><code>Study #1</code></td><td><code>Study \#1</code></td></tr>
+    <tr><td>_ (underscore, in text)</td><td><code>p_value</code></td><td><code>p\_value</code></td></tr>
+    <tr><td>{ and } (braces)</td><td><code>{literal}</code></td><td><code>\{literal\}</code></td></tr>
+    <tr><td>em dash —</td><td>copy-paste —</td><td><code>---</code></td></tr>
+    <tr><td>en dash – (ranges)</td><td>copy-paste –</td><td><code>--</code> (e.g. pp.~12--18)</td></tr>
+    <tr><td>Ellipsis …</td><td><code>...</code></td><td><code>\ldots</code></td></tr>
+    <tr><td>"Quote marks"</td><td><code>"wrong"</code></td><td><code>``correct''</code></td></tr>
+    <tr><td>Non-breaking space</td><td>space before ref</td><td><code>~</code> (e.g. <code>Figure~1</code>)</td></tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 2 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch2">
+  <div class="chapter-tag">Chapter 02 · Text</div>
+  <h2>Text and Formatting</h2>
+  <p class="chapter-intro">Making words do things. Mostly the same things Word does, but with backslashes.</p>
+
+  <h3>Font Effects</h3>
+  <pre><code class="language-latex">\textbf{bold text}          % Bold — use for key terms
+\textit{italic text}        % Italic — use for test names, species, foreign terms
+\underline{underlined}      % Underline — APA rarely uses this
+\textsc{Small Caps}         % Small caps — for abbreviations
+\texttt{monospace text}     % Typewriter font — for code
+
+% Combining
+\textbf{\textit{bold italic}}  % works, but check APA guidelines first</code></pre>
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <div class="callout-title">APA Tip</div>
+      <div class="callout-text">In APA 7, psychological test names like <em>Raven's Standard Progressive Matrices</em> and statistical terms like <em>t</em>-test are italicized. Use <code>\textit{}</code> for these. Don't bold things randomly — APA is very opinionated about this.</div>
+    </div>
+  </div>
+
+  <h3>Paragraphs and Spacing</h3>
+  <pre><code class="language-latex">% New paragraph: leave a blank line
+This is the first paragraph. It says things.
+
+This is the second paragraph. A blank line between = new paragraph.
+
+% Force new line (rarely needed, and APA hates orphan lines)
+First line.\\
+Second line on same paragraph.
+
+% Non-breaking space (use before figure/table references)
+See Table~1 for descriptive statistics.
+As shown in Figure~2, the correlation was weak.</code></pre>
+
+  <h3>Font Sizes</h3>
+  <p>You'll rarely need these manually — the <code>apa7</code> package handles sizes. But for general documents:</p>
+  <pre><code class="language-latex">{\tiny This is tiny}           % 5pt
+{\small This is small}         % 9pt  
+{\normalsize This is normal}   % 10/11/12pt (your base size)
+{\large This is large}         % 12pt
+{\Large This is larger}        % 14pt
+{\LARGE This is LARGE}         % 17pt
+{\huge This is huge}           % 20pt</code></pre>
+
+  <h3>Coloured Text</h3>
+  <pre><code class="language-latex">% Add to preamble:
+\usepackage{xcolor}
+
+% In document:
+This is \textcolor{red}{red text} in a sentence.
+\textcolor{blue}{Blue text here.}
+
+% Custom colours (hex)
+\definecolor{myblue}{HTML}{1a73e8}
+\textcolor{myblue}{Custom coloured text}</code></pre>
+
+  <div class="callout dark">
+    <div class="callout-icon">💀</div>
+    <div class="callout-body">
+      <div class="callout-title">Dark Corner</div>
+      <div class="callout-text">APA 7 does not permit coloured text in published manuscripts. You can use it for drafts and personal documents, but if you're submitting to a journal or professor expecting APA format — black text only. LaTeX's power is often used in restraint.</div>
+    </div>
+  </div>
+
+  <h3>Lists</h3>
+  <pre><code class="language-latex">% Bulleted list (itemize)
+\begin{itemize}
+  \item First finding
+  \item Second finding
+  \item Third finding
+\end{itemize}
+
+% Numbered list (enumerate)
+\begin{enumerate}
+  \item Hypothesis 1: Intelligence will correlate positively with creativity.
+  \item Hypothesis 2: The relationship will be of small-to-moderate magnitude.
+\end{enumerate}
+
+% Nested list
+\begin{itemize}
+  \item Cognitive measures
+    \begin{itemize}
+      \item Raven's SPM (intelligence)
+      \item Alternate Uses Task (creativity)
+    \end{itemize}
+  \item Demographic data
+\end{itemize}
+
+% Custom bullet symbol
+\begin{itemize}
+  \item[-] Item with dash bullet
+  \item[→] Item with arrow
+\end{itemize}</code></pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 3 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch3">
+  <div class="chapter-tag">Chapter 03 · Structure</div>
+  <h2>Document Structure and Sections</h2>
+  <p class="chapter-intro">How to organize a document so it looks like you knew what you were doing from the start.</p>
+
+  <h3>Sectioning Commands</h3>
+  <p>LaTeX automatically numbers sections and handles spacing. For the <code>article</code> class:</p>
+  <pre><code class="language-latex">\section{Introduction}          % 1. Introduction
+\subsection{Background}         % 1.1 Background
+\subsubsection{Prior Studies}   % 1.1.1 Prior Studies
+\paragraph{A detail}            % Unnumbered inline heading
+\subparagraph{Even deeper}      % One more level
+
+% For report/book class, you also get:
+\chapter{Literature Review}     % Chapter 1</code></pre>
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <div class="callout-title">APA Tip — The apa7 Package Maps Perfectly</div>
+      <div class="callout-text">In the <code>apa7</code> package, <code>\section{}</code> = APA Level 1 heading, <code>\subsection{}</code> = APA Level 2, <code>\subsubsection{}</code> = APA Level 3. The package styles them correctly automatically. You just use the right level.</div>
+    </div>
+  </div>
+
+  <h3>APA Heading Levels — What They Look Like</h3>
+  <table>
+    <tr><th>LaTeX Command</th><th>APA Level</th><th>Format</th></tr>
+    <tr><td><code>\section{}</code></td><td>Level 1</td><td>Centered, Bold, Title Case</td></tr>
+    <tr><td><code>\subsection{}</code></td><td>Level 2</td><td>Left-aligned, Bold, Title Case</td></tr>
+    <tr><td><code>\subsubsection{}</code></td><td>Level 3</td><td>Left-aligned, Bold Italic, Title Case</td></tr>
+    <tr><td><code>\paragraph{}</code></td><td>Level 4</td><td>Indented, Bold, ends with period.</td></tr>
+    <tr><td><code>\subparagraph{}</code></td><td>Level 5</td><td>Indented, Bold Italic, ends with period.</td></tr>
+  </table>
+
+  <h3>Table of Contents</h3>
+  <pre><code class="language-latex">\begin{document}
+\maketitle
+
+\tableofcontents   % Generates TOC automatically from your sections
+\newpage           % Start content on next page
+
+\section{Introduction}
+...</code></pre>
+
+  <h3>Labels and Cross-References</h3>
+  <p>This is one of LaTeX's killer features — automatic cross-referencing that updates when you move things around.</p>
+  <pre><code class="language-latex">% Label something
+\section{Method}
+\label{sec:method}    % put the label right after the thing you're labelling
+
+\begin{table}
+\caption{Descriptive Statistics}
+\label{tab:descriptives}
+...
+\end{table}
+
+% Reference it anywhere in the document
+As described in Section~\ref{sec:method}, participants were...
+Table~\ref{tab:descriptives} presents descriptive statistics.
+
+% \pageref gives the page number instead
+See page~\pageref{sec:method} for the method.</code></pre>
+
+  <div class="callout cat">
+    <div class="callout-icon">🐱</div>
+    <div class="callout-body">
+      <div class="callout-title">Cat Says — Naming Convention</div>
+      <div class="callout-text">Use prefixes for labels so you know what they refer to: <code>sec:</code> for sections, <code>tab:</code> for tables, <code>fig:</code> for figures, <code>eq:</code> for equations. So <code>\label{fig:scatterplot}</code> not just <code>\label{scatterplot}</code>. Future you will thank present you.</div>
+    </div>
+  </div>
+
+  <h3>Page Breaks and Spacing</h3>
+  <pre><code class="language-latex">\newpage          % Start a new page
+\clearpage        % New page AND force all pending figures/tables to appear
+\vspace{12pt}     % Add 12pt of vertical space
+\vspace{1cm}      % Add 1cm of vertical space
+\vfill            % Push everything below to bottom of page
+\noindent         % Don't indent this paragraph</code></pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 4 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch4">
+  <div class="chapter-tag">Chapter 04 · Math & Stats</div>
+  <h2>Math Mode: Where LaTeX Goes From Good to God</h2>
+  <p class="chapter-intro">This is the thing LaTeX was literally built for. Your stats will look better than any Word document that has ever existed.</p>
+
+  <pre class="ascii">
+  /\\_/\\ 
+ ( >.< )   "My p-value is .042 and I
+  > ω <    wrote it in LaTeX. It is art."
+  </pre>
+
+  <h3>The Two Math Modes</h3>
+  <p>LaTeX has two ways to write math:</p>
+  <pre><code class="language-latex">% 1. INLINE — inside a sentence, wrap in $ $
+A significant correlation was found ($r = .42$, $p < .05$).
+The sample mean was $M = 24.3$ ($SD = 4.1$).
+
+% 2. DISPLAY — its own line, centered, wrap in \[ \]
+\[
+r_{xy} = \frac{\sum(x_i - \bar{x})(y_i - \bar{y})}
+              {\sqrt{\sum(x_i-\bar{x})^2 \sum(y_i-\bar{y})^2}}
+\]
+
+% 3. NUMBERED EQUATION — display with auto-number
+\begin{equation}
+r = \frac{n\sum xy - \sum x \sum y}
+         {\sqrt{[n\sum x^2-(\sum x)^2][n\sum y^2-(\sum y)^2]}}
+\label{eq:pearson}
+\end{equation}</code></pre>
+
+  <h3>Stats You'll Write in Every Psych Paper</h3>
+  <pre><code class="language-latex">% Correlation
+$r(28) = .42$, $p = .021$, 95\% CI $[.08, .67]$
+
+% t-test
+$t(29) = 2.14$, $p = .041$, $d = 0.78$
+
+% F-statistic (ANOVA)
+$F(2, 27) = 4.23$, $p = .025$, $\eta^2 = .24$
+
+% Chi-square
+$\chi^2(1, N = 30) = 5.24$, $p = .022$, $\phi = .42$
+
+% Mean and SD
+$M = 24.3$, $SD = 4.1$
+
+% Regression
+$R^2 = .18$, $\beta = .43$, $p = .003$
+
+% Confidence interval
+95\% CI $[2.14, 8.93]$
+
+% Note: APA style uses no leading zero → .042 not 0.042
+% In LaTeX: $p = .042$ (not $p = 0.042$)</code></pre>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <div class="callout-title">APA 7 Stats Rule</div>
+      <div class="callout-text">APA 7 says: no leading zero for values that cannot exceed 1 (p-values, correlations, effect sizes). So it's <code>$p = .042$</code> not <code>$p = 0.042$</code>. Also italicize all statistical symbols: <em>t</em>, <em>F</em>, <em>M</em>, <em>SD</em>, <em>r</em>, <em>p</em>. In LaTeX, <code>$ $</code> automatically italicizes.</div>
+    </div>
+  </div>
+
+  <h3>Fractions, Powers, and Subscripts</h3>
+  <pre><code class="language-latex">% Fraction
+$\frac{numerator}{denominator}$
+$\frac{1}{2}$               → ½
+$\frac{SS_{between}}{SS_{total}}$   → effect size formula look
+
+% Powers (superscript) — use ^
+$R^2$          → R²
+$\chi^2$       → χ²
+$x^{n+1}$      → x^(n+1)   (use {} for multi-char)
+
+% Subscripts — use _
+$M_{pre}$      → M_pre
+$SS_{within}$  → SS_within
+$x_{i}$        → x_i
+
+% Both together
+$x_i^2$        → x_i²
+$M_{treatment} - M_{control}$</code></pre>
+
+  <h3>Greek Letters (The Ones Psychologists Actually Use)</h3>
+  <pre><code class="language-latex">$\alpha$    → α   (significance level, Cronbach's alpha)
+$\beta$     → β   (standardized coefficient, Type II error)
+$\gamma$    → γ   (gamma coefficient)
+$\delta$    → δ   (Cohen's d uses this spirit)
+$\eta$      → η   (eta squared — effect size)
+$\mu$       → μ   (population mean)
+$\nu$       → ν   (degrees of freedom sometimes)
+$\sigma$    → σ   (population SD)
+$\chi$      → χ   (chi-square)
+$\omega$    → ω   (omega squared — effect size)
+$\rho$      → ρ   (Spearman correlation)
+$\phi$      → φ   (phi coefficient)
+$\Sigma$    → Σ   (summation — capital = \Sigma)
+$\Delta$    → Δ   (change/difference)</code></pre>
+
+  <h3>Useful Math Symbols</h3>
+  <pre><code class="language-latex">$\pm$           → ±   (plus or minus)
+$\neq$          → ≠   (not equal)
+$\geq$          → ≥   (greater than or equal)
+$\leq$          → ≤   (less than or equal)
+$\approx$       → ≈   (approximately equal)
+$\infty$        → ∞   (infinity)
+$\sqrt{x}$      → √x  (square root)
+$\sqrt[3]{x}$   → ∛x  (cube root)
+$\bar{x}$       → x̄   (mean / x-bar)
+$\hat{y}$       → ŷ   (y-hat / predicted value)
+$\sum_{i=1}^{n} x_i$   → Σ notation
+$\cdot$         → ·   (multiplication dot)</code></pre>
+
+  <h3>The amsmath Package — For Better Math</h3>
+  <pre><code class="language-latex">% Add to preamble:
+\usepackage{amsmath}
+
+% Aligned equations (great for showing steps)
+\begin{align}
+  SS_{total}  &= \sum(x_i - \bar{x})^2 \\
+  SS_{between} &= n\sum(\bar{x}_j - \bar{x})^2 \\
+  SS_{within}  &= \sum\sum(x_{ij} - \bar{x}_j)^2
+\end{align}
+
+% Unnumbered aligned (add * to suppress numbers)
+\begin{align*}
+  r &= \frac{\text{Cov}(X,Y)}{\sigma_X \sigma_Y} \\
+    &= \frac{\sum(x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum(x_i-\bar{x})^2}\sqrt{\sum(y_i-\bar{y})^2}}
+\end{align*}
+
+% Text inside math (use \text{})
+$p < .05 \text{ (two-tailed)}$</code></pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 5 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch5">
+  <div class="chapter-tag">Chapter 05 · Tables</div>
+  <h2>Tables: APA Style, No Vertical Lines, Suffer Accordingly</h2>
+  <p class="chapter-intro">APA tables are minimalist by design. LaTeX makes them look better than anything you can produce in Word, but you do have to actually know what you're doing.</p>
+
+  <h3>The Basic Table Structure</h3>
+  <pre><code class="language-latex">% Add to preamble: \usepackage{booktabs}
+
+\begin{table}[h]                          % [h] = place Here (approximately)
+  \caption{Descriptive Statistics for Study Variables}
+  \label{tab:descriptives}
+  \begin{tabular}{lccc}                   % 4 columns: left, center, center, center
+    \toprule                              % thick top line
+    Variable    & $M$   & $SD$  & Range   \\   % \\ = end of row
+    \midrule                              % thin divider line
+    SPM Score   & 13.40 & 2.71  & 8--18   \\
+    AUT Fluency & 11.20 & 4.93  & 3--22   \\
+    \bottomrule                           % thick bottom line
+  \end{tabular}
+  \note{SPM = Standard Progressive Matrices. AUT = Alternate Uses Task.}
+\end{table}</code></pre>
+
+  <h3>Column Alignment Codes</h3>
+  <table>
+    <tr><th>Code</th><th>Alignment</th><th>Use For</th></tr>
+    <tr><td><code>l</code></td><td>Left</td><td>Variable names, text</td></tr>
+    <tr><td><code>c</code></td><td>Center</td><td>Numbers, statistics</td></tr>
+    <tr><td><code>r</code></td><td>Right</td><td>Numbers when aligning decimals</td></tr>
+    <tr><td><code>p{3cm}</code></td><td>Fixed width, left</td><td>Long text that needs wrapping</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <div class="callout-title">Never Use \hline in APA Tables</div>
+      <div class="callout-text"><code>\hline</code> creates thin lines everywhere and looks unprofessional. <code>booktabs</code> gives you <code>\toprule</code>, <code>\midrule</code>, and <code>\bottomrule</code> which are thicker at the top/bottom and look like actual journal tables. Always use <code>\usepackage{booktabs}</code> and never touch <code>\hline</code>.</div>
+    </div>
+  </div>
+
+  <h3>A Real Correlation Table (APA Style)</h3>
+  <pre><code class="language-latex">\begin{table}[h]
+  \caption{Intercorrelations Among Study Variables}
+  \label{tab:correlations}
+  \begin{tabular}{lccc}
+    \toprule
+    Variable        & 1      & 2      & 3      \\
+    \midrule
+    1. SPM Score    & ---    &        &        \\
+    2. AUT Fluency  & .21    & ---    &        \\
+    3. AUT Original & .17    & .68*** & ---    \\
+    \midrule
+    $M$             & 13.40  & 11.20  & 8.70   \\
+    $SD$            &  2.71  &  4.93  & 3.45   \\
+    \bottomrule
+  \end{tabular}
+  \note{$n = 30$. 
+        *** $p < .001$.}
+\end{table}</code></pre>
+
+  <h3>Spanning Columns with \multicolumn</h3>
+  <pre><code class="language-latex">\begin{tabular}{lcccc}
+  \toprule
+                  & \multicolumn{2}{c}{Group A} & \multicolumn{2}{c}{Group B} \\
+                  \cmidrule(lr){2-3} \cmidrule(lr){4-5}  % partial lines
+  Variable        & $M$ & $SD$ & $M$ & $SD$ \\
+  \midrule
+  Intelligence    & 13.2 & 2.4 & 12.8 & 3.1 \\
+  Creativity      & 11.5 & 4.2 & 12.1 & 3.9 \\
+  \bottomrule
+\end{tabular}</code></pre>
+
+  <h3>Float Placement</h3>
+  <p>The <code>[h]</code> after <code>\begin{table}</code> is a placement specifier. LaTeX decides where to put figures and tables ("floats") based on an algorithm.</p>
+  <table>
+    <tr><th>Specifier</th><th>Means</th></tr>
+    <tr><td><code>h</code></td><td>Here (approximately where you put it in the source)</td></tr>
+    <tr><td><code>t</code></td><td>Top of the page</td></tr>
+    <tr><td><code>b</code></td><td>Bottom of the page</td></tr>
+    <tr><td><code>p</code></td><td>Separate page for floats</td></tr>
+    <tr><td><code>H</code></td><td>Exactly here (requires <code>float</code> package — forces it)</td></tr>
+  </table>
+
+  <pre><code class="language-latex">% Add float package to preamble for [H]:
+\usepackage{float}
+
+\begin{table}[H]  % Forces table exactly here, no negotiation
+...</code></pre>
+
+  <div class="callout cat">
+    <div class="callout-icon">🐱</div>
+    <div class="callout-body">
+      <div class="callout-title">Cat Says — APA Tables Go at the End</div>
+      <div class="callout-text">In APA manuscript format (<code>man</code> mode), tables and figures traditionally appear at the <em>end</em> of the document, after the references. The <code>apa7</code> package handles this automatically. Don't fight it. When you switch to <code>doc</code> mode (for reading), tables appear inline.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 6 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch6">
+  <div class="chapter-tag">Chapter 06 · Figures</div>
+  <h2>Figures and Images</h2>
+  <p class="chapter-intro">Putting pictures in documents — easier than you'd think, harder than it should be.</p>
+
+  <h3>Basic Image Insertion</h3>
+  <pre><code class="language-latex">% Add to preamble:
+\usepackage{graphicx}
+
+% In document:
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{scatterplot.png}
+  \caption{Scatterplot of SPM scores and AUT fluency scores ($n = 30$).}
+  \label{fig:scatterplot}
+\end{figure}</code></pre>
+
+  <p>The image file (here <code>scatterplot.png</code>) must be in the <strong>same folder</strong> as your <code>.tex</code> file. Supported formats: <code>.png</code>, <code>.jpg</code>, <code>.pdf</code>, <code>.eps</code>.</p>
+
+  <h3>Controlling Image Size</h3>
+  <pre><code class="language-latex">% By proportion of text width (most flexible)
+\includegraphics[width=0.8\textwidth]{image.png}    % 80% of text width
+\includegraphics[width=\textwidth]{image.png}       % full text width
+\includegraphics[width=0.5\textwidth]{image.png}    % 50% of text width
+
+% By specific dimensions
+\includegraphics[width=10cm]{image.png}
+\includegraphics[height=8cm]{image.png}
+
+% By scale factor
+\includegraphics[scale=0.5]{image.png}  % half size
+
+% Both width and height (may distort — be careful)
+\includegraphics[width=8cm, height=6cm]{image.png}</code></pre>
+
+  <h3>Side-by-Side Figures</h3>
+  <pre><code class="language-latex">% Add to preamble: \usepackage{subcaption}
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{histogram_spm.png}
+    \caption{Distribution of SPM scores.}
+    \label{fig:hist_spm}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{histogram_aut.png}
+    \caption{Distribution of AUT fluency scores.}
+    \label{fig:hist_aut}
+  \end{subfigure}
+  \caption{Histograms of study variables showing approximately normal distributions.}
+  \label{fig:histograms}
+\end{figure}</code></pre>
+
+  <div class="callout tip">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <div class="callout-title">Pro Tip — Export from R or Python as PDF</div>
+      <div class="callout-text">If you're generating figures in R or Python, export them as <code>.pdf</code> files (vector format) rather than <code>.png</code>. They scale to any size without pixelating, and they look crisp at print resolution. <code>ggsave("plot.pdf")</code> in R, <code>plt.savefig("plot.pdf")</code> in Python.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 7 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch7">
+  <div class="chapter-tag">Chapter 07 · Citations</div>
+  <h2>Citations and Bibliography</h2>
+  <p class="chapter-intro">The part that actually matters for academic survival.</p>
+
+  <pre class="ascii">
+  /\\_/\\ 
+ ( -.- )  "I have 47 sources.
+  > ♥ <   My .bib file has 47 entries.
+           The reference list generated itself.
+           I haven't cried once today."
+  </pre>
+
+  <h3>The Three-File Setup</h3>
+  <div class="hbox">
+    <p><strong>paper.tex</strong> — your document, where you write citations like <code>\parencite{kim2005}</code></p>
+    <p><strong>references.bib</strong> — your reference database, structured entries for every source</p>
+    <p><strong>paper.pdf</strong> — the output, with formatted in-text citations and a reference list</p>
+  </div>
+
+  <h3>Setting Up Citations in the Preamble</h3>
+  <pre><code class="language-latex">% Required packages for APA 7 citations:
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage[style=apa, backend=biber]{biblatex}
+\addbibresource{references.bib}   % point to your .bib file</code></pre>
+
+  <h3>Citation Commands</h3>
+  <pre><code class="language-latex">% Parenthetical → (Kim, 2005)
+\parencite{kim2005}
+
+% Narrative → Kim (2005)
+\textcite{kim2005}
+
+% Multiple sources → (Guilford, 1967; Kim, 2005; Torrance, 1966)
+\parencite{guilford1967, kim2005, torrance1966}
+
+% With page number → (Kim, 2005, p. 42)
+\parencite[p.~42]{kim2005}
+
+% Narrative with page → Kim (2005, p. 42)
+\textcite[p.~42]{kim2005}
+
+% Suppress in-text, include in reference list only
+\nocite{guilford1967}
+
+% Include everything in .bib in reference list
+\nocite{*}</code></pre>
+
+  <h3>In Real Sentences</h3>
+  <pre><code class="language-latex">The threshold hypothesis suggests that above a certain IQ level,
+intelligence and creativity become largely independent
+\parencite{guilford1967}.
+
+\textcite{kim2005} conducted a meta-analysis of 21 studies and
+found a weak positive correlation ($r = .17$) between IQ and
+divergent thinking.
+
+Several researchers have questioned the threshold model
+\parencite{jauk2013, preckel2006, sligh2005}.</code></pre>
+
+  <h3>The .bib File — Your Reference Database</h3>
+  <p>Create a file called <code>references.bib</code> in the same folder as your <code>.tex</code> file. Each entry has a type, a key, and fields.</p>
+
+  <h4>Journal Article</h4>
+  <pre><code class="language-bibtex">@article{kim2005,
+  author  = {Kim, Kyung Hee},
+  year    = {2005},
+  title   = {Can only intelligent people be creative?
+             {A} meta-analysis},
+  journal = {Journal of Secondary Gifted Education},
+  volume  = {16},
+  number  = {2--3},
+  pages   = {57--66},
+  doi     = {10.4219/jsge-2005-473}
+}</code></pre>
+
+  <h4>Book</h4>
+  <pre><code class="language-bibtex">@book{guilford1967,
+  author    = {Guilford, Joy Paul},
+  year      = {1967},
+  title     = {The nature of human intelligence},
+  publisher = {McGraw-Hill}
+}</code></pre>
+
+  <h4>Book Chapter</h4>
+  <pre><code class="language-bibtex">@incollection{kaufman2009,
+  author    = {Kaufman, James C.},
+  year      = {2009},
+  title     = {Creativity and intelligence},
+  booktitle = {The {Cambridge} handbook of creativity},
+  editor    = {Kaufman, James C. and Sternberg, Robert J.},
+  pages     = {39--56},
+  publisher = {Cambridge University Press},
+  doi       = {10.1017/CBO9780511763205.004}
+}</code></pre>
+
+  <h4>Common Entry Types</h4>
+  <table>
+    <tr><th>Entry Type</th><th>Use For</th></tr>
+    <tr><td><code>@article</code></td><td>Journal articles</td></tr>
+    <tr><td><code>@book</code></td><td>Whole books</td></tr>
+    <tr><td><code>@incollection</code></td><td>Chapters in edited books</td></tr>
+    <tr><td><code>@inproceedings</code></td><td>Conference papers</td></tr>
+    <tr><td><code>@thesis</code></td><td>Dissertations and theses</td></tr>
+    <tr><td><code>@misc</code></td><td>Websites, reports, anything else</td></tr>
+    <tr><td><code>@online</code></td><td>Web sources (biblatex specific)</td></tr>
+  </table>
+
+  <h3>Critical .bib File Rules</h3>
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <div class="callout-title">Capitalization — BibTeX Murders Your Titles</div>
+      <div class="callout-text">BibTeX automatically lowercases everything in a title except the first word. Wrap words that must stay capitalized in <code>{}</code>:<br><br>
+      <code>title = {The role of {Working Memory} in creativity}</code><br><br>
+      Without the braces: "The role of working memory in creativity"<br>
+      With the braces: "The role of Working Memory in creativity"<br><br>
+      This applies to proper nouns, test names, acronyms — anything that must stay capitalized.
+      </div>
+    </div>
+  </div>
+
+  <pre><code class="language-bibtex">% ❌ WRONG — BibTeX will lowercase "Raven's"
+title = {Standardization of Raven's Progressive Matrices}
+
+% ✅ CORRECT
+title = {Standardization of {Raven's} {Progressive Matrices}}
+
+% ❌ WRONG — ampersand breaks compilation
+journal = {Psychological Science & Practice}
+
+% ✅ CORRECT
+journal = {Psychological Science \& Practice}</code></pre>
+
+  <h3>Generating the Reference List</h3>
+  <pre><code class="language-latex">% At the end of your document, before \end{document}:
+\printbibliography</code></pre>
+
+  <h3>Compiling with Citations (Important!)</h3>
+  <pre><code class="language-plaintext">Correct compile order:
+1. pdflatex paper.tex       ← generates .aux file
+2. biber paper              ← processes .bib, generates .bbl
+3. pdflatex paper.tex       ← incorporates citations
+4. pdflatex paper.tex       ← resolves cross-references
+
+In Prism: usually one "compile" button handles all of this.
+If citations show as [?] — compile again.</code></pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 8 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch8">
+  <div class="chapter-tag">Chapter 08 · APA 7 <span class="badge b-psych">Psych</span> <span class="badge b-apa">APA 7</span></div>
+  <h2>The apa7 Package: All Four Modes</h2>
+  <p class="chapter-intro">One package to rule all APA formatting. Understand the four modes and you understand everything.</p>
+
+  <h3>The Four Modes — When to Use What</h3>
+  <table>
+    <tr><th>Mode</th><th>Command</th><th>Use When</th><th>Looks Like</th></tr>
+    <tr><td><strong>Student</strong></td><td><code>stu</code></td><td>Assignments, coursework</td><td>Title page with course + prof fields, double-spaced</td></tr>
+    <tr><td><strong>Manuscript</strong></td><td><code>man</code></td><td>Research reports, formal submissions</td><td>Title page without course fields, running head, double-spaced</td></tr>
+    <tr><td><strong>Journal</strong></td><td><code>jou</code></td><td>Actual journal submission</td><td>Single-spaced, two-column, typeset appearance</td></tr>
+    <tr><td><strong>Document</strong></td><td><code>doc</code></td><td>Reading copy, looks published</td><td>Single-spaced, readable, like a journal article</td></tr>
+  </table>
+
+  <h3>Student Mode — Your Default for AUD</h3>
+  <pre><code class="language-latex">\documentclass[stu, 12pt]{apa7}
+
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[style=apa, backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+\title{The Relationship Between Intelligence and Creativity}
+\authorsnames{Shuvi}
+\authorsaffiliations{Ambedkar University Delhi}
+\course{Experiments in Psychology}
+\professor{Dr. Sharma}
+\duedate{March 2026}
+
+\abstract{Your abstract text here. Under 250 words.}
+\keywords{intelligence, creativity, correlation, AUT, SPM}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+...
+
+\printbibliography
+\end{document}</code></pre>
+
+  <h3>Manuscript Mode — For Formal Research</h3>
+  <pre><code class="language-latex">\documentclass[man, 12pt]{apa7}
+% Same packages as above
+% Different metadata fields (no course/professor):
+
+\title{Intelligence and Creativity: An Exploratory Study}
+\authorsnames{Shuvi}
+\authorsaffiliations{Ambedkar University Delhi}
+\authornote{\addORCIDlink{Shuvi}{0000-0000-0000-0000}
+  Correspondence concerning this article should be addressed
+  to Shuvi, Department of Psychology, Ambedkar University Delhi.
+  Email: shuvi@aud.ac.in}</code></pre>
+
+  <h3>Document Mode — To Send to Humans Who Want to Read It</h3>
+  <pre><code class="language-latex">\documentclass[doc, 12pt]{apa7}
+% Just change the mode — everything else stays the same
+% Output: single-spaced, professional-looking, easy to read</code></pre>
+
+  <div class="callout cat">
+    <div class="callout-icon">🐱</div>
+    <div class="callout-body">
+      <div class="callout-title">Cat's Honest Recommendation</div>
+      <div class="callout-text">Use <strong>stu</strong> for everything you submit at AUD. It's designed exactly for your situation. Switch to <strong>doc</strong> when you want to show it to a friend or advisor — it's much more readable. <strong>man</strong> and <strong>jou</strong> are for when you're submitting to actual journals, which will happen eventually if you're serious about research.</div>
+    </div>
+  </div>
+
+  <h3>APA 7 Specific Commands</h3>
+  <pre><code class="language-latex">% Note below a table (apa7 specific, formats as "Note.")
+\note{SPM = Standard Progressive Matrices.}
+
+% Author note in manuscript
+\authornote{Conflicts of interest: None declared.}
+
+% Add ORCID link
+\addORCIDlink{Shuvi}{0000-0000-0000-0000}
+
+% Masked for peer review
+\documentclass[man, 12pt, mask]{apa7}
+% This replaces author name with "Author" and removes identifying info</code></pre>
+
+  <h3>Multiple Authors</h3>
+  <pre><code class="language-latex">\authorsnames[1,2]{First Author, Second Author}
+\authorsaffiliations{
+  \affiliation{1}{Ambedkar University Delhi},
+  \affiliation{2}{University of Delhi}
+}</code></pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 9 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch9">
+  <div class="chapter-tag">Chapter 09 · Packages</div>
+  <h2>Packages: 6,000 Solutions to Problems You Didn't Know You Had</h2>
+  <p class="chapter-intro">CTAN (the LaTeX package repository) has over 6,000 packages. You need maybe 15. Here are the ones that matter.</p>
+
+  <h3>How Packages Work</h3>
+  <pre><code class="language-latex">% In the preamble (before \begin{document}):
+\usepackage{packagename}              % basic loading
+\usepackage[option1, option2]{pkg}    % with options
+
+% Multiple packages on one line (works but hard to read):
+\usepackage{amsmath, booktabs, graphicx}
+
+% Better — one per line with comments:
+\usepackage{amsmath}     % enhanced math environments
+\usepackage{booktabs}    % professional table rules
+\usepackage{graphicx}    % insert images</code></pre>
+
+  <h3>Essential Packages — The Starter Pack</h3>
+  <table>
+    <tr><th>Package</th><th>Load With</th><th>What It Does</th></tr>
+    <tr><td><code>apa7</code></td><td><code>\usepackage{apa7}</code> (via documentclass)</td><td>APA 7 everything — required for psych papers</td></tr>
+    <tr><td><code>babel</code></td><td><code>[american]{babel}</code></td><td>Language rules, hyphenation, date formats</td></tr>
+    <tr><td><code>csquotes</code></td><td><code>{csquotes}</code></td><td>Smart quotation marks, required by biblatex</td></tr>
+    <tr><td><code>biblatex</code></td><td><code>[style=apa, backend=biber]{biblatex}</code></td><td>Citation management — use for everything</td></tr>
+    <tr><td><code>amsmath</code></td><td><code>{amsmath}</code></td><td>Better math — align, equation arrays, \text{}</td></tr>
+    <tr><td><code>booktabs</code></td><td><code>{booktabs}</code></td><td>Professional table rules — always use with tables</td></tr>
+    <tr><td><code>graphicx</code></td><td><code>{graphicx}</code></td><td>Insert images with \includegraphics</td></tr>
+    <tr><td><code>hyperref</code></td><td><code>[hidelinks]{hyperref}</code></td><td>Clickable links in PDF — load LAST in preamble</td></tr>
+    <tr><td><code>geometry</code></td><td><code>[margin=1in]{geometry}</code></td><td>Page margins — apa7 sets these automatically</td></tr>
+    <tr><td><code>microtype</code></td><td><code>{microtype}</code></td><td>Subtle typography improvements — just include it</td></tr>
+    <tr><td><code>float</code></td><td><code>{float}</code></td><td>Enables [H] placement for figures/tables</td></tr>
+    <tr><td><code>subcaption</code></td><td><code>{subcaption}</code></td><td>Side-by-side figures with individual captions</td></tr>
+    <tr><td><code>xcolor</code></td><td><code>{xcolor}</code></td><td>Coloured text — \textcolor{red}{text}</td></tr>
+    <tr><td><code>setspace</code></td><td><code>{setspace}</code></td><td>Line spacing control — apa7 handles this already</td></tr>
+    <tr><td><code>todonotes</code></td><td><code>{todonotes}</code></td><td>Draft notes in margins — \todo{fix this}</td></tr>
+  </table>
+
+  <h3>Packages Worth Knowing About (Intermediate)</h3>
+  <table>
+    <tr><th>Package</th><th>What It Does</th><th>When You Need It</th></tr>
+    <tr><td><code>longtable</code></td><td>Tables spanning multiple pages</td><td>When your data won't fit one page</td></tr>
+    <tr><td><code>rotating</code></td><td>Sideways tables/figures</td><td>Wide tables that need landscape orientation</td></tr>
+    <tr><td><code>multirow</code></td><td>Cells spanning multiple rows in tables</td><td>Complex table layouts</td></tr>
+    <tr><td><code>siunitx</code></td><td>Proper number and unit formatting</td><td>When you want aligned decimals in tables</td></tr>
+    <tr><td><code>fontenc</code></td><td>Font encoding</td><td>Fix character rendering issues</td></tr>
+    <tr><td><code>inputenc</code></td><td>Input encoding</td><td>If you type accented characters directly (é, ü)</td></tr>
+    <tr><td><code>lipsum</code></td><td>Placeholder text generator</td><td>Testing layouts — \lipsum[1]</td></tr>
+    <tr><td><code>cleveref</code></td><td>Smart cross-references</td><td>\cref{fig:x} automatically says "Figure 1"</td></tr>
+  </table>
+
+  <h3>The hyperref Rule</h3>
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <div class="callout-title">hyperref Must Be Loaded Last</div>
+      <div class="callout-text"><code>hyperref</code> rewrites a lot of LaTeX's internal commands. If you load it before other packages, those packages might not work correctly. Always put <code>\usepackage[hidelinks]{hyperref}</code> as the <strong>last</strong> <code>\usepackage</code> line in your preamble. The <code>hidelinks</code> option removes the ugly coloured boxes around links.</div>
+    </div>
+  </div>
+
+  <h3>Finding Packages</h3>
+  <p>If you need to do something and don't know if a package exists: search <strong>ctan.org</strong> or Google "latex [what you want to do]". TeX StackExchange (<strong>tex.stackexchange.com</strong>) has solved every LaTeX problem that has ever existed. Every single one.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- CHAPTER 10 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="ch10">
+  <div class="chapter-tag">Chapter 10 · Debugging</div>
+  <h2>When Everything Is on Fire</h2>
+  <p class="chapter-intro">Error handling. The part of the guide you'll reread at 1am three days before submission.</p>
+
+  <pre class="ascii">
+  /\\_/\\ 
+ ( x.x )  ! LaTeX Error: Missing $ inserted.
+  > ^ <   
+           I have been using LaTeX for 4 years.
+           I still get this error.
+           We do not ask why.
+  </pre>
+
+  <h3>The Golden Rules of Debugging</h3>
+  <ol>
+    <li><strong>Read the error message.</strong> It gives you a line number. Go to that line.</li>
+    <li><strong>The error is often on the line before.</strong> LaTeX reports errors late.</li>
+    <li><strong>Check your braces.</strong> Every <code>{</code> needs a matching <code>}</code>.</li>
+    <li><strong>Check your environments.</strong> Every <code>\begin{x}</code> needs <code>\end{x}</code>.</li>
+    <li><strong>Check your math mode.</strong> Every <code>$</code> needs a matching <code>$</code>.</li>
+    <li><strong>Comment out sections</strong> to isolate where the error lives.</li>
+    <li><strong>Compile often.</strong> If you compile every 10 lines, errors are easy to find. If you write 300 lines then compile, you're suffering needlessly.</li>
+  </ol>
+
+  <h3>Common Errors and How to Fix Them</h3>
+  <table>
+    <tr><th>Error Message</th><th>Most Likely Cause</th><th>Fix</th></tr>
+    <tr><td><code>! Missing $ inserted</code></td><td>Math character outside math mode</td><td>Wrap in <code>$ $</code>, or escape the character (<code>\_</code>)</td></tr>
+    <tr><td><code>! Undefined control sequence</code></td><td>Typo in a command</td><td>Check spelling of <code>\command</code></td></tr>
+    <tr><td><code>! Missing } inserted</code></td><td>Unclosed brace</td><td>Find the <code>{</code> without a matching <code>}</code></td></tr>
+    <tr><td><code>! Environment X undefined</code></td><td>Missing package or typo in environment name</td><td>Add required package or check spelling</td></tr>
+    <tr><td><code>[?]</code> for citations</td><td>biber hasn't processed the .bib file</td><td>Compile → biber → compile × 2</td></tr>
+    <tr><td><code>?? for labels</code></td><td>Label not found or needs recompile</td><td>Compile twice to resolve cross-references</td></tr>
+    <tr><td><code>Overfull \hbox</code></td><td>A word or URL is too long for the line</td><td>Add <code>\sloppy</code> or use <code>\url{}</code> for URLs</td></tr>
+    <tr><td>Package conflict error</td><td>Two packages trying to redefine the same thing</td><td>Check load order; <code>hyperref</code> must be last</td></tr>
+    <tr><td>File not found for image</td><td>Image not in same folder as .tex</td><td>Move image to same folder, check exact filename</td></tr>
+  </table>
+
+  <h3>Debugging Strategy</h3>
+  <pre><code class="language-latex">% Strategy: binary search for errors
+
+% If you have 200 lines and something's broken:
+% Comment out the second half
+
+\begin{document}
+\maketitle
+\section{Introduction}
+... (first half of content) ...
+
+% \section{Method}    ← comment out everything below
+% ... rest of document ...
+
+\printbibliography
+\end{document}
+
+% If it compiles → error is in the commented-out section
+% If it fails → error is in the first half
+% Keep halving until you find it</code></pre>
+
+  <h3>The todonotes Package — For Drafts</h3>
+  <pre><code class="language-latex">% Add to preamble:
+\usepackage{todonotes}
+
+% In document:
+\todo{Add the actual p-value here}
+\todo[color=green]{This section needs a reference}
+\todo[inline]{Write the discussion section — due Friday}
+
+% At the end of your draft:
+\listoftodos  % generates a list of all TODOs</code></pre>
+
+  <div class="callout dark">
+    <div class="callout-icon">💀</div>
+    <div class="callout-body">
+      <div class="callout-title">Dark Corner — The Overfull hbox</div>
+      <div class="callout-text"><code>Overfull \hbox (X pt too wide)</code> is a warning, not an error. LaTeX is telling you text is sticking out of the margin. It won't stop your document from compiling. For drafts, put <code>\sloppy</code> in the preamble to suppress it. For final submission, fix each one properly. Nobody submits perfectly hbox-free LaTeX and anyone who says they do is lying.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- APPENDIX A -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="appa">
+  <div class="chapter-tag">Appendix A <span class="badge b-psych">Psych</span> <span class="badge b-apa">APA 7</span></div>
+  <h2>Full Paper Template — Copy, Paste, Suffer Less</h2>
+  <p class="chapter-intro">A complete, ready-to-use APA 7 psychology paper template. This is what you paste into Prism for your intelligence-creativity study (or any correlational paper).</p>
+
+  <h3>paper.tex — The Main File</h3>
+  <pre><code class="language-latex">%% ═══════════════════════════════════════════════════════════
+%% APA 7 Psychology Paper Template
+%% Mode: stu (student paper)
+%% Packages: apa7, biblatex (biber), booktabs, amsmath
+%% ═══════════════════════════════════════════════════════════
+
+\documentclass[stu, 12pt]{apa7}
+
+%% ── LANGUAGE & QUOTES ──────────────────────────────────────
+\usepackage[american]{babel}
+\usepackage{csquotes}
+
+%% ── MATH ───────────────────────────────────────────────────
+\usepackage{amsmath}
+
+%% ── TABLES & FIGURES ───────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+
+%% ── CITATIONS ──────────────────────────────────────────────
+\usepackage[style=apa, backend=biber]{biblatex}
+\addbibresource{references.bib}
+
+%% ── HYPERLINKS (always load last) ──────────────────────────
+\usepackage[hidelinks]{hyperref}
+
+%% ═══════════════════════════════════════════════════════════
+%% PAPER METADATA
+%% ═══════════════════════════════════════════════════════════
+\title{The Relationship Between General Intelligence and 
+       Creative Thinking: An Exploratory Correlational Study}
+\authorsnames{Shuvi}
+\authorsaffiliations{Ambedkar University Delhi}
+\course{Experiments in Psychology}
+\professor{Dr. Sharma}
+\duedate{March 2026}
+
+\abstract{
+The present study investigated the relationship between general 
+intelligence and creative thinking ability in undergraduate students. 
+A correlational design was employed with $N = 30$ participants 
+recruited from Ambedkar University Delhi. General intelligence was 
+assessed using the Raven's Standard Progressive Matrices Short Form 
+\parencite{raven1941}, and creative thinking was measured using the 
+Alternate Uses Task \parencite{guilford1967}. A Pearson product-moment 
+correlation was computed to test the primary hypothesis. Results 
+indicated a small, non-significant positive correlation 
+($r = .21$, $p = .267$), discussed in relation to the threshold 
+hypothesis of intelligence and creativity.
+}
+
+\keywords{intelligence, creativity, Raven's SPM, 
+Alternate Uses Task, threshold hypothesis, correlation}
+
+%% ═══════════════════════════════════════════════════════════
+\begin{document}
+\maketitle
+
+%% ── INTRODUCTION ───────────────────────────────────────────
+\section{Introduction}
+
+The relationship between intelligence and creativity has long 
+occupied researchers in cognitive and personality psychology 
+\parencite{guilford1967, kaufman2009}. The \textit{threshold 
+hypothesis} proposes that while a minimum level of intelligence 
+is necessary for creative achievement, above an IQ threshold 
+of approximately 120, the two constructs become largely 
+independent \parencite{guilford1967}. Empirical support has 
+been mixed: \textcite{kim2005} reported a mean correlation of 
+$r = .17$ across 21 studies, while \textcite{jauk2013} found 
+threshold effects that varied by creativity criterion.
+
+The present study extends this literature to an Indian 
+undergraduate sample --- a population underrepresented in 
+the creativity--intelligence literature.
+
+\subsection{Hypotheses}
+
+Based on prior meta-analytic evidence \parencite{kim2005}, 
+it was hypothesized that:
+
+\begin{enumerate}
+  \item General intelligence (SPM score) would show a 
+        significant positive correlation with creative thinking 
+        (AUT fluency score).
+  \item The relationship would be of small-to-moderate 
+        magnitude ($r \approx .17$--$.30$), consistent with 
+        prior meta-analytic findings.
+\end{enumerate}
+
+%% ── METHOD ─────────────────────────────────────────────────
+\section{Method}
+
+\subsection{Participants}
+
+Thirty undergraduate students ($n_\text{women} = 20$, 
+$n_\text{men} = 10$; $M_\text{age} = 20.4$ years, 
+$SD = 1.8$, range: 18--24) were recruited from Ambedkar 
+University Delhi through convenience sampling. All participants 
+were enrolled in psychology courses. Informed consent was 
+obtained prior to participation.
+
+\subsection{Measures}
+
+\subsubsection{Raven's Standard Progressive Matrices (Short Form)}
+
+General intelligence was assessed using the Raven's Standard 
+Progressive Matrices Short Form \parencite{raven1941}, an 
+18-item measure of non-verbal abstract reasoning. Items 
+increase in difficulty across four sets (B, C, D, E). 
+Scores range from 0 to 18, with higher scores indicating 
+greater reasoning ability. The short form has demonstrated 
+adequate internal consistency ($\alpha = .78$; 
+\citeauthor{myszkowski2018}, \citeyear{myszkowski2018}).
+
+\subsubsection{Alternate Uses Task}
+
+Creative thinking was assessed using the Alternate Uses Task 
+\parencite[AUT;][]{guilford1967}. Participants were instructed 
+to list as many unusual uses as possible for a common object 
+(a brick) within 3 minutes. Responses were scored for 
+\textit{fluency} (total valid responses). Two independent 
+raters scored all protocols; interrater reliability was 
+acceptable ($\kappa = .82$).
+
+\subsection{Procedure}
+
+All data were collected in individual sessions lasting 
+approximately 25 minutes. The SPM Short Form was administered 
+first, followed by the AUT. Sessions were conducted in a 
+quiet, distraction-free room. Participants received partial 
+course credit for participation.
+
+%% ── RESULTS ────────────────────────────────────────────────
+\section{Results}
+
+Descriptive statistics are presented in Table~\ref{tab:descriptives}. 
+SPM scores ranged from 8 to 18 ($M = 13.40$, $SD = 2.71$). AUT 
+fluency scores ranged from 3 to 22 ($M = 11.20$, $SD = 4.93$). 
+Both variables showed approximately normal distributions (Shapiro--Wilk: 
+SPM, $W = .97$, $p = .531$; AUT, $W = .96$, $p = .388$).
+
+A Pearson product-moment correlation was computed to examine the 
+association between intelligence and creative thinking. Results 
+revealed a small, statistically non-significant positive correlation, 
+$r(28) = .21$, $p = .267$, 95\% CI $[-.16, .53]$. This did not 
+support Hypothesis 1.
+
+\begin{table}[H]
+  \caption{Descriptive Statistics for Study Variables ($N = 30$)}
+  \label{tab:descriptives}
+  \begin{tabular}{lcccc}
+    \toprule
+    Variable       & $M$   & $SD$  & Min & Max \\
+    \midrule
+    SPM Score      & 13.40 & 2.71  & 8   & 18  \\
+    AUT Fluency    & 11.20 & 4.93  & 3   & 22  \\
+    \bottomrule
+  \end{tabular}
+  \note{SPM = Standard Progressive Matrices (Short Form).
+        AUT = Alternate Uses Task. Scores are raw.}
+\end{table}
+
+%% ── DISCUSSION ─────────────────────────────────────────────
+\section{Discussion}
+
+The present study found no significant correlation between 
+general intelligence and divergent creative thinking in 
+undergraduate students ($r = .21$, $p = .267$). This is 
+broadly consistent with the threshold hypothesis 
+\parencite{guilford1967, jauk2013}, which predicts that 
+above a minimum intelligence level, the two constructs 
+function independently.
+
+\subsection{Limitations}
+
+Several limitations warrant consideration. First, the sample 
+size ($N = 30$) affords limited statistical power. A 
+post-hoc power analysis indicated power $= .22$ to detect 
+a small effect ($r = .17$) at $\alpha = .05$ (two-tailed). 
+Detecting this effect with adequate power ($1 - \beta = .80$) 
+would require $N \approx 191$. Second, the AUT measures only 
+\textit{fluency} --- a limited operationalization of a 
+multidimensional construct.
+
+\subsection{Conclusions}
+
+These findings contribute to a growing body of evidence 
+suggesting a complex, context-dependent intelligence--creativity 
+relationship. Future research should employ larger samples, 
+multiple creativity indices, and longitudinal designs, 
+particularly in South Asian undergraduate populations.
+
+%% ── REFERENCES ─────────────────────────────────────────────
+\printbibliography
+
+\end{document}</code></pre>
+
+  <h3>references.bib — The Reference Database</h3>
+  <pre><code class="language-bibtex">@book{guilford1967,
+  author    = {Guilford, Joy Paul},
+  year      = {1967},
+  title     = {The nature of human intelligence},
+  publisher = {McGraw-Hill}
+}
+
+@article{jauk2013,
+  author  = {Jauk, Emanuel and Benedek, Mathias and
+             Dunst, Beate and Neubauer, Aljoscha C.},
+  year    = {2013},
+  title   = {The relationship between intelligence and creativity:
+             {New} support for the threshold hypothesis by means
+             of empirical breakpoint detection},
+  journal = {Intelligence},
+  volume  = {41},
+  number  = {4},
+  pages   = {212--221},
+  doi     = {10.1016/j.intell.2013.03.003}
+}
+
+@article{kim2005,
+  author  = {Kim, Kyung Hee},
+  year    = {2005},
+  title   = {Can only intelligent people be creative?
+             {A} meta-analysis},
+  journal = {Journal of Secondary Gifted Education},
+  volume  = {16},
+  number  = {2--3},
+  pages   = {57--66},
+  doi     = {10.4219/jsge-2005-473}
+}
+
+@incollection{kaufman2009,
+  author    = {Kaufman, James C.},
+  year      = {2009},
+  title     = {Creativity and intelligence},
+  booktitle = {The {Cambridge} handbook of creativity},
+  editor    = {Kaufman, James C. and Sternberg, Robert J.},
+  pages     = {39--56},
+  publisher = {Cambridge University Press}
+}
+
+@article{myszkowski2018,
+  author  = {Myszkowski, Nils and Storme, Martin},
+  year    = {2018},
+  title   = {A snapshot of $g$? {Binary} and polytomous
+             item-response theory investigations of the
+             {Raven's Standard Progressive Matrices}},
+  journal = {Intelligence},
+  volume  = {68},
+  pages   = {19--29},
+  doi     = {10.1016/j.intell.2018.02.010}
+}
+
+@article{raven1941,
+  author  = {Raven, John C.},
+  year    = {1941},
+  title   = {Standardization of progressive matrices, 1938},
+  journal = {British Journal of Medical Psychology},
+  volume  = {19},
+  pages   = {137--150}
+}</code></pre>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- APPENDIX B -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<section class="chapter" id="appb">
+  <div class="chapter-tag">Appendix B · Quick Reference</div>
+  <h2>Cheat Sheet — Everything in One Place</h2>
+
+  <h3>Document Skeleton</h3>
+  <pre><code class="language-latex">\documentclass[stu, 12pt]{apa7}
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[style=apa, backend=biber]{biblatex}
+\usepackage[hidelinks]{hyperref}  % always last
+\addbibresource{references.bib}
+
+\title{Title}\authorsnames{Name}\authorsaffiliations{Affiliation}
+\course{Course}\professor{Prof}\duedate{Date}
+\abstract{Abstract text.}\keywords{kw1, kw2}
+
+\begin{document}\maketitle
+... content ...
+\printbibliography
+\end{document}</code></pre>
+
+  <h3>Quick Command Reference</h3>
+  <table>
+    <tr><th>What You Want</th><th>Command</th></tr>
+    <tr><td>Bold text</td><td><code>\textbf{text}</code></td></tr>
+    <tr><td>Italic text</td><td><code>\textit{text}</code></td></tr>
+    <tr><td>Inline math</td><td><code>$r = .42$</code></td></tr>
+    <tr><td>Display math</td><td><code>\[ formula \]</code></td></tr>
+    <tr><td>Mean (x-bar)</td><td><code>$\bar{x}$</code></td></tr>
+    <tr><td>Subscript</td><td><code>$M_{pre}$</code></td></tr>
+    <tr><td>Superscript</td><td><code>$R^2$</code></td></tr>
+    <tr><td>Fraction</td><td><code>$\frac{a}{b}$</code></td></tr>
+    <tr><td>Alpha α</td><td><code>$\alpha$</code></td></tr>
+    <tr><td>Chi-square χ²</td><td><code>$\chi^2$</code></td></tr>
+    <tr><td>Parenthetical cite</td><td><code>\parencite{key}</code></td></tr>
+    <tr><td>Narrative cite</td><td><code>\textcite{key}</code></td></tr>
+    <tr><td>New page</td><td><code>\newpage</code></td></tr>
+    <tr><td>New section</td><td><code>\section{Title}</code></td></tr>
+    <tr><td>Label something</td><td><code>\label{fig:x}</code></td></tr>
+    <tr><td>Reference a label</td><td><code>\ref{fig:x}</code></td></tr>
+    <tr><td>Insert image</td><td><code>\includegraphics[width=0.8\textwidth]{file.png}</code></td></tr>
+    <tr><td>Em dash —</td><td><code>---</code></td></tr>
+    <tr><td>En dash – (ranges)</td><td><code>--</code></td></tr>
+    <tr><td>Percent sign %</td><td><code>50\%</code></td></tr>
+    <tr><td>Ampersand &amp;</td><td><code>Baumeister \&amp; Twenge</code></td></tr>
+    <tr><td>Tilde (non-breaking space)</td><td><code>Figure~1</code></td></tr>
+    <tr><td>Todo note</td><td><code>\todo{write this}</code></td></tr>
+  </table>
+
+  <h3>Stats Quick Reference</h3>
+  <pre><code class="language-latex">$r(28) = .42$, $p = .021$, 95\% CI $[.08, .67]$
+$t(29) = 2.14$, $p = .041$, $d = 0.78$
+$F(2, 27) = 4.23$, $p = .025$, $\eta^2 = .24$
+$\chi^2(1, N = 30) = 5.24$, $p = .022$
+$M = 13.40$, $SD = 2.71$
+$\alpha = .05$  $\beta = .80$  $1 - \beta = .80$</code></pre>
+
+  <div class="callout cat">
+    <div class="callout-icon">🐱</div>
+    <div class="callout-body">
+      <div class="callout-title">Final Cat Wisdom</div>
+      <div class="callout-text">LaTeX has a steep learning curve and a very flat maintenance curve. The first paper takes 4 hours. The second takes 1. The third takes 20 minutes because you just copy the template. Every paper you write makes the next one easier. Start now, suffer once, profit forever.<br><br>Also: <strong>save your work</strong>. <code>.tex</code> files are plain text — back them up on GitHub. Your laptop dying the night before submission is a solved problem if you use version control.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <p style="text-align:center;color:var(--muted);font-size:13px;">
+    🐱 <em>Don't Panic: A LaTeX Guide for Humans</em> · Beginner → Intermediate<br>
+    Built with references from <a href="https://latex-tutorial.com/tutorials/" target="_blank">latex-tutorial.com</a> 
+    and <a href="https://www.overleaf.com/learn" target="_blank">overleaf.com/learn</a><br>
+    For Shuvi · Ambedkar University Delhi · Experiments in Psychology
+  </p>
+</section>
+
+</div><!-- end .main -->
+
+<script>
+// Syntax highlighting
+document.addEventListener('DOMContentLoaded', () => {
+  hljs.highlightAll();
+});
+
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+}
+
+// Active nav link on scroll
+const chapters = document.querySelectorAll('.chapter');
+const navLinks = document.querySelectorAll('.nav-item a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.nav-item a[href="#${entry.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-80px 0px -60% 0px' });
+chapters.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>
